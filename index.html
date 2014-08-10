@@ -48,6 +48,8 @@
 	       		}
 			);
 
+			var llhash = {};
+
 			d3.csv("tabc_houston_small.csv", function(error, bars) 
 				{
   					if (error) return console.error(error);
@@ -56,11 +58,16 @@
   					var overlay = new google.maps.OverlayView();
 
 					  overlay.onAdd = function() {
+
+
 					    var layer = d3.select(this.getPanes().overlayLayer).append("div")
 					        .attr("class", "bars");
 
 					    
 					    overlay.draw = function() {
+
+					      llhash = {};
+
 					      var projection = this.getProjection(),
 					          padding = 30;
 
@@ -94,7 +101,18 @@
 
 					      function transform(d) {
 
+					      	tries = 0
+
 					        d = new google.maps.LatLng(d.value.lat, d.value.lng);
+
+					        while (llhash.hasOwnProperty(d.toString()) && tries < 20)
+					        {
+					        	d = new google.maps.LatLng(d.lat()-0.00005, d.lng());
+					        	tries++;
+					        }
+					        
+					        llhash[d.toString()] = 1;
+
 					        d = projection.fromLatLngToDivPixel(d);
 
 					        return d3.select(this)
