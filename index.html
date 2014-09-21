@@ -87,6 +87,8 @@
 					          .attr("cy", padding);
 
 					      // Add a label.
+
+					      var format = d3.format("$,.2f") // formats to a leading $ sign, with commas, and two places fixed precision after the decimal point
 					      marker.append("svg:text")
 					          .attr("x", padding)
 					          .attr("y", padding)
@@ -97,7 +99,9 @@
 					          .attr("x", padding)
 					          .attr("y", padding+12)
 					          .attr("dy", 20)
-					          .text(function(d) { return "$" + d.value.rev;});
+					          .text(function(d) { 
+					          	return format(d.value.rev);
+					          });
 
 					      function transform(d) {
 
