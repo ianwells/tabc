@@ -39,6 +39,7 @@
 		</style>
 	</head>
   	<body>
+
     	<div id="map"/>
     	<script type="text/javascript">
 
@@ -80,7 +81,7 @@
 			//we use this later to not draw bars on top of eachother
 			var llhash = {};
 
-			d3.csv("tabc_houston_small.csv", function(error, bars) 
+			d3.csv("tabc_houston_min.csv", function(error, bars) 
 				{
   					if (error) return console.error(error);
   					console.log(bars);
