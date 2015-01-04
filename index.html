@@ -24,8 +24,10 @@
 			}
 
 			.bars svg {
-			  width: 200px;
-			  height: 200px;
+			  color: #fff;
+			  text-shadow:
+			  
+			     1px 1px 0 #000;
 			  font: 12px sans-serif;
 			}
 
@@ -40,7 +42,34 @@
     	<div id="map"/>
     	<script type="text/javascript">
 
-	        // Create the Google Map…
+
+    		const BUMP_SIZE = 0.000075;
+    		//important z's: 12 (far) to 20 (close) z from 0 to 21 i start at 16
+    		//if rev is > this value, show it at this zoom level
+    		const THRESH = 
+    		[1000000
+    		,1000000
+    		,1000000
+    		,1000000
+    		,1000000
+    		,1000000
+    		,1000000
+    		,1000000
+    		,1000000
+    		,1000000
+    		,1000000
+    		,1000000
+    		,500000
+    		,300000
+    		,200000
+    		,150000
+    		,100000
+    		,70000
+    		,50000
+    		,25000
+    		,20000
+    		,0];
+
 			var map = new google.maps.Map(d3.select("#map").node(), 
 				{
 	         		center: new google.maps.LatLng(29.7503205, -95.3753704),
@@ -48,6 +77,7 @@
 	       		}
 			);
 
+			//we use this later to not draw bars on top of eachother
 			var llhash = {};
 
 			d3.csv("tabc_houston_small.csv", function(error, bars) 
@@ -57,76 +87,97 @@
 
   					var overlay = new google.maps.OverlayView();
 
-					  overlay.onAdd = function() {
-
-
+					  overlay.onAdd = function() 
+					  {
 					    var layer = d3.select(this.getPanes().overlayLayer).append("div")
 					        .attr("class", "bars");
 
-					    
-					    overlay.draw = function() {
+					    overlay.draw = function() 
+					    {
 
-					      llhash = {};
+					    	console.debug("zoom: " + map.zoom )
+						    var data = d3.entries(barsToShow(bars));
 
-					      var projection = this.getProjection(),
-					          padding = 30;
+						      llhash = {};
 
-					      var marker = layer.selectAll("svg")
-					          .data(d3.entries(bars))
-					          .each(transform)
-					        .enter().append("svg:svg")
-					          .each(transform)
-					          .attr("class", "marker");
+						      var projection = this.getProjection(),
+						          padding = 30;
 
-					      // Add a circle.
+						      var marker = layer.selectAll("svg")
+						          .data(data, function(d) {return d.value.id;})
+						          .each(transform);
 
-					      var radius =  function(d) {return(parseFloat(d.value.rev)/1000000.00 * 20) + 2;};
-					      marker.append("svg:circle")
-					          .attr("r", radius)
-					          .attr("cx", padding)
-					          .attr("cy", padding);
+						      marker.exit().remove();
 
-					      // Add a label.
+						      var radius =  function(d) {return((parseFloat(d.value.rev)/1000000.00 * 20) + 2) * 1.5;};
+						      var format = d3.format("$,.2f") // formats to a leading $ sign, with commas, and two places fixed precision after the decimal point
 
-					      var format = d3.format("$,.2f") // formats to a leading $ sign, with commas, and two places fixed precision after the decimal point
-					      marker.append("svg:text")
-					          .attr("x", padding)
-					          .attr("y", padding)
-					          .attr("dy", 20)
-					          .text(function(d) { return d.value.name;});
 
-					      marker.append("svg:text")
-					          .attr("x", padding)
-					          .attr("y", padding+12)
-					          .attr("dy", 20)
-					          .text(function(d) { 
-					          	return format(d.value.rev);
-					          });
+						      marker.enter().append("svg:svg") //:svg
+						          .each(transform)
+						          .attr("class", "marker")
+								.append("svg:circle")
+						      	  .attr("r", 0)
+ 								  .transition()
+						          .attr("r", radius)
+						          .attr("cx", padding)
+						          .attr("cy", padding);
 
-					      function transform(d) {
+						      marker.append("svg:text")
+						          .attr("x", padding)
+						          .attr("y", padding)
+						          .attr("dy", 20)
+						          .text(function(d) { return d.value.name;});
 
-					      	tries = 0
+						      marker.append("svg:text")
+						          .attr("x", padding)
+						          .attr("y", padding+12)
+						          .attr("dy", 20)
+						          .text(function(d) { 
+						          	return format(d.value.rev);
+						          });
 
-					        d = new google.maps.LatLng(d.value.lat, d.value.lng);
+						      function barsToShow(allBars) 
+						      {
+						      		var goodBars = []
 
-					        while (llhash.hasOwnProperty(d.toString()) && tries < 20)
-					        {
-					        	d = new google.maps.LatLng(d.lat()-0.00005, d.lng());
-					        	tries++;
-					        }
-					        
-					        llhash[d.toString()] = 1;
+						      		for(i = 0; i<allBars.length; i++)
+						      		{
+						      			if (allBars[i].rev > THRESH[map.zoom])
+						      			{
+						      				goodBars.push(allBars[i]);
+						      			}
+						      		}
 
-					        d = projection.fromLatLngToDivPixel(d);
+						      		return goodBars;
+						      }
 
-					        return d3.select(this)
-					            .style("left", (d.x - padding) + "px")
-					            .style("top", (d.y - padding) + "px");
-					      }
+						      function transform(d) 
+						      {
+						      	tries = 0
+
+						        d = new google.maps.LatLng(d.value.lat, d.value.lng);
+
+						        while (llhash.hasOwnProperty(d.toString()) && tries < 20)
+						        {
+						        	d = new google.maps.LatLng(d.lat()-BUMP_SIZE, d.lng());
+						        	tries++;
+						        }
+						        
+						        llhash[d.toString()] = 1;
+
+						        d = projection.fromLatLngToDivPixel(d);
+
+						        return d3.select(this)
+						            .style("left", (d.x - padding) + "px")
+						            .style("top", (d.y - padding) + "px");
+						      }
 					    };
-				}
+					}
+
 				overlay.setMap(map);
-			}
+
+				}
 			);
 
 			
