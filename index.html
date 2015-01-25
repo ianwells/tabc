@@ -32,7 +32,7 @@
 			}
 
 			.bars circle {
-			  fill: red;
+			  fill: rgba(255,0,0,0.5);
 			  stroke: black;
 			  stroke-width: 2px;
 			}
@@ -74,7 +74,7 @@
 			var map = new google.maps.Map(d3.select("#map").node(), 
 				{
 	         		center: new google.maps.LatLng(29.7503205, -95.3753704),
-	          		zoom: 16
+	          		zoom: 14
 	       		}
 			);
 
@@ -102,7 +102,7 @@
 						      llhash = {};
 
 						      var projection = this.getProjection(),
-						          padding = 30;
+						          padding = 50;
 
 						      var marker = layer.selectAll("svg")
 						          .data(data, function(d) {return d.value.id;})
