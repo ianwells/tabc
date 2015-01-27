@@ -41,7 +41,7 @@ Lots more Texas civic data at http://www.texastransparency.org/Data_Center/Searc
 			  color: #fff;
 			  text-shadow:
 			  
-			     1px 1px 0 #000;
+			     1px 1px 0 #444;
 			  font: 12px sans-serif;
 			}
 
@@ -71,9 +71,8 @@ Lots more Texas civic data at http://www.texastransparency.org/Data_Center/Searc
 
     	<script type="text/javascript">
 
-
     		const BUMP_SIZE = 0.000075;
-    		//important z's: 12 (far) to 20 (close) z from 0 to 21 i start at 16
+
     		//if rev is > this value, show it at this zoom level
     		const THRESH = 
     		[1000000
@@ -145,26 +144,28 @@ Lots more Texas civic data at http://www.texastransparency.org/Data_Center/Searc
 						      marker.enter().append("svg:svg") //:svg
 						          .each(transform)
 						          .attr("class", "marker")
-								.append("svg:circle")
-						      	  .attr("r", 0)
- 								  .transition()
-						          .attr("r", radius)
-						          .attr("cx", padding)
-						          .attr("cy", padding);
+								
+						          .each(function(d) 
+						          {
+						          		d3.select(this).append("svg:circle")
+								      	  .attr("r", 0)
+		 								  .transition()
+								          .attr("r", radius)
+								          .attr("cx", padding)
+								          .attr("cy", padding)	
 
-						      marker.append("svg:text")
-						          .attr("x", padding)
-						          .attr("y", padding)
-						          .attr("dy", 20)
-						          .text(function(d) { return d.value.name;});
+									    d3.select(this).append("text")
+								          .attr("x", padding)
+								          .attr("y", padding)
+								          .attr("dy", 20)
+								          .text(function(d) { return d.value.name; } );
 
-						      marker.append("svg:text")
-						          .attr("x", padding)
-						          .attr("y", padding+12)
-						          .attr("dy", 20)
-						          .text(function(d) { 
-						          	return format(d.value.rev);
-						          });
+									    d3.select(this).append("text")
+								          .attr("x", padding)
+								          .attr("y", padding+12)
+								          .attr("dy", 20)
+								          .text(function(d) { return format(d.value.rev); } );
+							      } );
 
 						      function barsToShow(allBars) 
 						      {
