@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <!--A little map to visualize the approximate gross receipts of bars in Houston, based on taxes paid, which you can 
 get here: http://www.window.state.tx.us/taxinfo/taxfiles.html#bev.  Bars are weighted by their inferred gross receipts, zoom in 
-to see smaller bars.  Lat/Lngs from bars come from geocoding the addresses, bars with identical lat/lng are nudged south.
-Bars that don't sell liquor might not appear.  Values may not be representative of total gross receipts.  Code and more
-data at github.com/ianwells
+to see smaller bars.  Lat/Lngs from bars come from geocoding the addresses reported on the tax forms, bars with identical lat/lng are nudged south.  Bars that don't sell liquor might not appear.  Bars in general might not appear.  Values may not be representative of total gross receipts.  
+
+Code and more data at github.com/ianwells
+
+Data downloaded on January 25 2015.
 
 A message from the Texas Comptroller of Public Accounts:
-
-Data downloaded on Janurary 25 2015.
 
 "The Comptroller of Public Accounts cannot vouch for the data or analysis derived from data after it has been retrieved from the Comptroller's Web site."
 
@@ -50,11 +50,25 @@ Lots more Texas civic data at http://www.texastransparency.org/Data_Center/Searc
 			  stroke: black;
 			  stroke-width: 2px;
 			}
+
+			p {
+				font-family:sans-serif;
+			    display: block;
+			    margin-top: 0.5em;
+			    margin-bottom: 0.5em;
+			    margin-left: 0;
+			    margin-right: 0;
+			}
+
 		</style>
 	</head>
   	<body>
-
+		<div id="header">
+			<p style="font-size:12px">&nbspTABC Gross Beverage Receipts for Dec 2014</p>
+			<p style="font-size:8px" > &nbsp Data from <a href=http://www.window.state.tx.us/taxinfo/taxfiles.html#bev> here</a> as of Jan 25 2015. "The Comptroller of Public Accounts cannot vouch for the data or analysis derived from data after it has been retrieved from the Comptroller's Web site." </p> 
+ 		</div>
     	<div id="map"/>
+
     	<script type="text/javascript">
 
 
