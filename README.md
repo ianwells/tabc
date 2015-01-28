@@ -7,9 +7,11 @@ Playing around with TABC tax data.
 
 This data comes from http://www.window.state.tx.us/taxinfo/taxfiles.html
 
-The _small sample files are just taxes from June 2014, for bars that say they are in Houston, downloaded around July 2014.
+The houston_small sample files are just taxes from June 2014, for bars that say they are in Houston, downloaded around July 2014.
 
-The _min file is what the js references, and that's tax data from Dec 2014, downloaded January 25 2015.
+The houston_min file is what the js references, and that's tax data from Dec 2014, downloaded January 25 2015.
+
+The had_min file is Houston, Austin, and Dallas for Dec 2014, downloaded January 25 2015.
 
 A bunch more data is in tax.csv, that's about a year's worth of time series data.  The bar index for that is in bars.csv.
 
