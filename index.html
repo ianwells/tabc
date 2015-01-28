@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<!--A little map to visualize the approximate gross receipts of bars in Houston, based on taxes paid, which you can 
-get here: http://www.window.state.tx.us/taxinfo/taxfiles.html#bev.  Bars are weighted by their inferred gross receipts, zoom in 
-to see smaller bars.  Lat/Lngs from bars come from geocoding the addresses reported on the tax forms, bars with identical lat/lng are nudged south.  Bars that don't sell liquor might not appear.  Bars in general might not appear.  Values may not be representative of total gross receipts.  
+<!--A little map to visualize the approximate gross receipts of bars in Houston, Austin, and Dallas/Fort Worth based on taxes paid,which you can get here: http://www.window.state.tx.us/taxinfo/taxfiles.html#bev.  Bars are weighted by their inferred gross receipts, zoom in to see smaller bars.  Lat/Lngs from bars come from geocoding the addresses reported on the tax forms, bars with identical lat/lng are nudged south.  Bars that don't sell liquor might not appear.  Bars in general might not appear.  Values may not be representative of total gross receipts.  
 
 Code and more data at github.com/ianwells
 
@@ -66,6 +64,10 @@ Lots more Texas civic data at http://www.texastransparency.org/Data_Center/Searc
 		<div id="header">
 			<p style="font-size:12px">&nbspTABC Mixed Beverage Gross Receipts for Dec 2014</p>
 			<p style="font-size:8px" > &nbsp Data from <a href=http://www.window.state.tx.us/taxinfo/taxfiles.html#bev> here</a> as of Jan 25 2015. "The Comptroller of Public Accounts cannot vouch for the data or analysis derived from data after it has been retrieved from the Comptroller's Web site." </p> 
+
+			<button onclick="goHouston()">Houston</button>
+			<button onclick="goAustin()">Austin</button>
+			<button onclick="goDallas()">Dallas</button>
  		</div>
     	<div id="map"/>
 
@@ -98,17 +100,38 @@ Lots more Texas civic data at http://www.texastransparency.org/Data_Center/Searc
     		,20000
     		,0];
 
+    		const HTX = new google.maps.LatLng(29.7503205, -95.3753704);
+    		const DTX = new google.maps.LatLng(32.7765477, -96.7868133);
+    		const ATX = new google.maps.LatLng(30.2697265, -97.7365899);
+
+    		const START_ZOOM = 14;
+
 			var map = new google.maps.Map(d3.select("#map").node(), 
 				{
 	         		center: new google.maps.LatLng(29.7503205, -95.3753704),
-	          		zoom: 14
+	          		zoom: START_ZOOM
 	       		}
 			);
+
+			function goHouston() {
+			    map.panTo(HTX);
+			    map.zoom(START_ZOOM);
+			}
+
+			function goDallas() {
+				map.panTo(DTX);
+				map.zoom(START_ZOOM);
+			}
+
+			function goAustin() {
+			    map.panTo(ATX);
+			    map.zoom(START_ZOOM);
+			}
 
 			//we use this later to not draw bars on top of eachother
 			var llhash = {};
 
-			d3.csv("tabc_houston_min.csv", function(error, bars) 
+			d3.csv("tabc_had_min.csv", function(error, bars) 
 				{
   					if (error) return console.error(error);
   					console.log(bars);
@@ -207,7 +230,8 @@ Lots more Texas civic data at http://www.texastransparency.org/Data_Center/Searc
 
 				overlay.setMap(map);
 
-				}
+			}
+
 			);
 
 			
